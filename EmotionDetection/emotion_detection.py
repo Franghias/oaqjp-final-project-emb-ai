@@ -14,14 +14,34 @@ def emotion_detector(text_to_analyze):  # Define a function named sentiment_anal
     formatted_response = json.loads(response.text)
     
     # Extracting emotion's scores from the response
-    anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
-    disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
-    fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
-    joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
-    sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
-
+    # If the response status code is 200, extract the emotion scores from the response
+    if response.status_code == 200:
+        anger_score = formatted_response['emotionPredictions'][0]['emotion']['anger']
+        disgust_score = formatted_response['emotionPredictions'][0]['emotion']['disgust']
+        fear_score = formatted_response['emotionPredictions'][0]['emotion']['fear']
+        joy_score = formatted_response['emotionPredictions'][0]['emotion']['joy']
+        sadness_score = formatted_response['emotionPredictions'][0]['emotion']['sadness']
+    # Else, output none for all the emotion scores
+    elif response.status_code == 400:
+        return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+           }
+    else:
+        return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+           }
+    
     dominant_emotion_score = 0
-
     if anger_score > dominant_emotion_score:
         dominant_emotion_score = anger_score
         dominant_emotion = 'anger'
